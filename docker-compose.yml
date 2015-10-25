@@ -1,0 +1,98 @@
+eurekaService:
+  image: microservicedemo/eureka-service
+  restart: always
+  environment:
+    - SPRING_PROFILES_ACTIVE=docker
+  ports:
+    - "8761:8761"
+  volumes:
+    - $PWD/logs:/var/logs/microservices/
+
+zuulService:
+  image: microservicedemo/zuul-service
+  restart: always
+  environment:
+    - SPRING_PROFILES_ACTIVE=docker
+  ports:
+    - "8765:8765"
+  volumes:
+    - $PWD/logs:/var/logs/microservices/
+  links:
+    - eurekaService
+    - catalogService
+
+priceService:
+  image: microservicedemo/price-service
+  restart: always
+  environment:
+    - SPRING_PROFILES_ACTIVE=docker
+  ports:
+    - "8090:8090"
+  volumes:
+    - $PWD/logs:/var/logs/microservices/
+  links:
+    - eurekaService
+
+productService:
+  image: microservicedemo/product-service
+  restart: always
+  environment:
+    - SPRING_PROFILES_ACTIVE=docker
+  volumes:
+    - $PWD/logs:/var/logs/microservices/
+  links:
+    - eurekaService
+
+commentService:
+  image: microservicedemo/comment-service
+  restart: always
+  environment:
+    - SPRING_PROFILES_ACTIVE=docker
+  volumes:
+    - $PWD/logs:/var/logs/microservices/
+  links:
+    - eurekaService
+
+rabbitmq:
+  image: rabbitmq:3-management
+  restart: always
+  environment:
+    - SPRING_PROFILES_ACTIVE=docker
+  ports:
+    - "5672:5672"
+    - "15672:15672"
+
+catalogService:
+  image: microservicedemo/catalog-service
+  restart: always
+  environment:
+    - SPRING_PROFILES_ACTIVE=docker
+  volumes:
+    - /$PWD/logs:/var/logs/microservices/
+  links:
+    - eurekaService
+    - rabbitmq
+
+hystrixDashboardService:
+  image: microservicedemo/hystrix-dashboard-service
+  restart: always
+  environment:
+    - SPRING_PROFILES_ACTIVE=docker
+  ports:
+    - "7979:7979"
+  volumes:
+    - $PWD/logs:/var/logs/microservices/
+  links:
+    - catalogService
+
+turbineService:
+  image: microservicedemo/turbine-service
+  restart: always
+  environment:
+    - SPRING_PROFILES_ACTIVE=docker
+  ports:
+    - "8989:8989"
+  volumes:
+    - $PWD/logs:/var/logs/microservices/
+  links:
+    - rabbitmq

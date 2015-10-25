@@ -1,0 +1,46 @@
+server:
+  port: 0
+
+zuul:
+  ignoredServices: "*"
+  routes:
+    catalog-service:
+      path: /catalog-service/**
+
+    price-service:
+      path: /price-service/**
+
+    product-service:
+      path: /product-service/**
+
+    comment-service:
+      path: /comment-service/**
+
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 60000
+ribbon:
+  ConnectTimeout: 3000
+  ReadTimeout: 60000
+
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+---
+spring:
+  profiles: docker
+
+server:
+  port: 8765
+
+eureka:
+  numberRegistrySyncRetries: 0
+  instance:
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: http://eurekaService:8761/eureka/
+

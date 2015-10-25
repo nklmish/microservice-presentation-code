@@ -1,0 +1,163 @@
+buildscript {
+    ext {
+        springBootVersion = '1.2.4.RELEASE'
+        springCloudVersion = '1.0.2.RELEASE'
+        groovyVersion = '2.4.3'
+        dockerPluginVersion = '2.6.1'
+        archaiusCoreVersion = '0.7.1'
+        dependencyMgmtVersion = '0.5.3.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "io.spring.gradle:dependency-management-plugin:${dependencyMgmtVersion}"
+        classpath "com.bmuschko:gradle-docker-plugin:${dockerPluginVersion}"
+    }
+}
+
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
+    group 'microservicedemo'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+    apply plugin: 'spring-boot'
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: 'java'
+    apply plugin: 'application'
+    apply plugin: 'com.bmuschko.docker-java-application'
+
+    sourceCompatibility = 1.8
+    sourceCompatibility = 1.8
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+
+    jar {
+        baseName = project.name
+        version = project.version
+    }
+
+    dependencies {
+        compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+        compile "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
+    }
+
+    docker {
+        url = "${dockerServerUrl}"
+        javaApplication {
+            baseImage = 'java:8'
+        }
+    }
+
+//   see https://github.com/spring-cloud/spring-cloud-starters/issues/20
+    dependencyManagement {
+        dependencies {
+            dependency("org.springframework.cloud:spring-cloud-starter-hystrix:${springCloudVersion}") {
+                exclude 'com.netflix.archaius:archaius-core'
+
+
+            }
+        }
+    }
+}
+
+project(':catalog-service') {
+    mainClassName = "com.nklmish.cs.catalogs.Application"
+
+    dependencies {
+        compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+        compile "com.netflix.archaius:archaius-core:${archaiusCoreVersion}"
+        compile "org.springframework.cloud:spring-cloud-starter-hystrix:${springCloudVersion}"
+        compile "org.springframework.cloud:spring-cloud-starter-eureka:${springCloudVersion}"
+        compile "org.springframework.cloud:spring-cloud-netflix-hystrix-amqp:${springCloudVersion}"
+        compile "org.springframework.cloud:spring-cloud-starter-bus-amqp:${springCloudVersion}"
+    }
+}
+
+project(':comment-service') {
+    mainClassName = "com.nklmish.cs.comments.Application"
+
+    dependencies {
+        compile "com.netflix.archaius:archaius-core:${archaiusCoreVersion}"
+        compile "org.springframework.cloud:spring-cloud-starter-hystrix:${springCloudVersion}"
+        compile "org.springframework.cloud:spring-cloud-starter-eureka:${springCloudVersion}"
+    }
+}
+
+project(':eureka-service') {
+    mainClassName = 'com.nklmish.es.Application'
+
+    dependencies {
+        compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+        compile ("org.springframework.cloud:spring-cloud-starter-eureka-server:${springCloudVersion}") {
+            exclude(module: 'servlet-api')
+        }
+    }
+}
+
+project(':price-service') {
+    mainClassName = "com.nklmish.ps.prices.Application"
+
+    dependencies {
+        compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+        compile "com.netflix.archaius:archaius-core:${archaiusCoreVersion}"
+        compile "org.springframework.cloud:spring-cloud-starter-hystrix:${springCloudVersion}"
+        compile "org.springframework.cloud:spring-cloud-starter-eureka:${springCloudVersion}"
+    }
+}
+
+project(':product-service') {
+    mainClassName = "com.nklmish.ps.products.Application"
+
+    dependencies {
+        compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+        compile "com.netflix.archaius:archaius-core:${archaiusCoreVersion}"
+        compile "org.springframework.cloud:spring-cloud-starter-hystrix:${springCloudVersion}"
+        compile "org.springframework.cloud:spring-cloud-starter-eureka:${springCloudVersion}"
+    }
+}
+
+project(':zuul-service') {
+    mainClassName = "com.nklmish.zuul.demo.Application"
+
+    dependencies {
+        compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+        compile "org.springframework.cloud:spring-cloud-starter-zuul:${springCloudVersion}"
+        compile "org.springframework.cloud:spring-cloud-starter-eureka:${springCloudVersion}"
+    }
+}
+
+project(':hystrix-dashboard-service') {
+    mainClassName = "com.nklmish.hds.Application"
+
+    dependencies {
+        compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+        compile "com.netflix.archaius:archaius-core:${archaiusCoreVersion}"
+        compile "org.springframework.cloud:spring-cloud-starter-hystrix-dashboard:${springCloudVersion}"
+    }
+}
+
+project(':turbine-service') {
+    mainClassName = "com.nklmish.ts.Application"
+
+    dependencies {
+        compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+        compile "org.springframework.cloud:spring-cloud-starter-turbine-amqp:${springCloudVersion}"
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.7'
+}
