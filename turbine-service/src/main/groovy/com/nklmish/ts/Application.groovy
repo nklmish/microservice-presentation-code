@@ -17,7 +17,7 @@ class Application {
 
     @Bean
     @Profile("docker")
-    public ConnectionFactory createRabbitMqConnectionFactory(@Value('${app.rabbitmq.host}') String host) {
+    public ConnectionFactory rabbitMq(@Value('${app.rabbitmq.host}') String host) {
         return new CachingConnectionFactory(host)
     }
 

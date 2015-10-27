@@ -26,8 +26,8 @@ class ProductBuilder {
         return restTemplate.getForObject("http://product-service/product/$id", Product)
     }
 
-    static Product productFallback(int productId) {
-        log.error("fallback method invoked, hystrix command failed to retrieve product via product service")
+    Product productFallback(int productId) {
+        log.error("failed to retrieve product {}", $productId)
         return new Product(name: "Demo Product")
     }
 
@@ -37,8 +37,8 @@ class ProductBuilder {
         return restTemplate.getForObject("http://price-service/price/$productId", Price)
     }
 
-    static Price priceFallback(int productId) {
-        log.error("fallback method invoked, hystrix command failed to retrieve price via price service")
+    Price priceFallback(int productId) {
+        log.error("failed to retrieve price for {}", productId)
         return null
     }
 
@@ -48,8 +48,8 @@ class ProductBuilder {
         return restTemplate.getForObject("http://comment-service/comment/$productId", List)
     }
 
-    static List<Comment> commentFallback(int productId) {
-        log.error("fallback method invoked, hystrix command failed to retrieve comments via comment service")
-        return [] //return empty list of comments
+    List<Comment> commentFallback(int productId) {
+        log.error("failed to retrieve comments for {}", productId)
+        return []
     }
 }

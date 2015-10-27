@@ -21,9 +21,16 @@ public class CommentService {
     @RequestMapping(value = "/{productId}", produces = APPLICATION_JSON_VALUE)
         List<Comment> findComments(@PathVariable Integer productId) {
         LOG.debug("retrieving comments for product {}", productId);
+
         return Lists.newArrayList(
-                new Comment(1, productId, "John", "I like this product very much!!!"),
-                new Comment(2, productId, "Bob", "A must buy, worth the price")
+                new Comment(1,
+                        productId,
+                        "John",
+                        "I like this product very much!!!"),
+                new Comment(2,
+                        productId,
+                        "Bob",
+                        "A must buy, worth the price")
         );
     }
 }

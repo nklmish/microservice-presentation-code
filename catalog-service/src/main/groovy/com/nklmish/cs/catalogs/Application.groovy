@@ -11,13 +11,13 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 
 @SpringBootApplication
-@EnableHystrix
 @EnableDiscoveryClient
+@EnableHystrix
 class Application {
 
     @Bean
     @Profile("docker")
-    public ConnectionFactory createRabbitMqConnectionFactory(@Value('${app.rabbitmq.host}') String host) {
+    public ConnectionFactory rabbitMq(@Value('${app.rabbitmq.host}') String host) {
        return new CachingConnectionFactory(host)
     }
 
