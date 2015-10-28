@@ -1,12 +1,6 @@
 server:
   port: 0
 
-eureka:
-  instance:
-    leaseRenewalIntervalInSeconds: 10
-  client:
-    registryFetchIntervalSeconds: 5
-
 ---
 spring:
   profiles: docker
