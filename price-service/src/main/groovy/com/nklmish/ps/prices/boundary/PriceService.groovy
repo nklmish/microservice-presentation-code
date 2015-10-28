@@ -14,7 +14,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 class PriceService {
 
     @RequestMapping(value = "/{productId}", produces = APPLICATION_JSON_VALUE)
-    Price findComments(@PathVariable Integer productId) {
+    Price findPrice(@PathVariable Integer productId) {
         log.debug("retrieving price for product {}", productId)
 
         return new Price(1, productId, 100 * productId)
