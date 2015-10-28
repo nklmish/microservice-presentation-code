@@ -11,6 +11,12 @@ eureka:
 logging:
   level:
     ROOT: INFO
+
+
+
+
+
+
 ---
 spring:
   profiles: docker

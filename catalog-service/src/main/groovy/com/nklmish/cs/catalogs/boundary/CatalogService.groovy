@@ -27,10 +27,8 @@ class CatalogService {
     Catalog findCatalog(@PathVariable Integer productId) {
         log.debug("retrieving catalog for productId {}", productId)
         Product product = productBuilder.fetchProduct(productId)
-        product.with {
-            comments = productBuilder.fetchComments(productId)
-            price = productBuilder.fetchPrice(productId)
-        }
+        product.comments = productBuilder.fetchComments(productId)
+        product.price = productBuilder.fetchPrice(productId)
 
         return new Catalog(productId, product)
     }
