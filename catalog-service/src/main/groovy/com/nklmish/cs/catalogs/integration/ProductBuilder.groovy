@@ -23,18 +23,20 @@ class ProductBuilder {
     @HystrixCommand(fallbackMethod = "productFallback")
     Product fetchProduct(int id) {
         log.debug("fetching product {}", id)
-        return restTemplate.getForObject("http://product-service/product/$id", Product)
+        return restTemplate
+                .getForObject("http://product-service/product/$id", Product)
     }
 
     Product productFallback(int productId) {
-        log.error("failed to retrieve product {}", $productId)
+        log.error("failed to retrieve product {}", productId)
         return new Product(name: "Demo Product")
     }
 
     @HystrixCommand(fallbackMethod = "priceFallback")
     Price fetchPrice(int productId) {
         log.debug("fetching price for product {}", productId)
-        return restTemplate.getForObject("http://price-service/price/$productId", Price)
+        return restTemplate
+                .getForObject("http://price-service/price/$productId", Price)
     }
 
     Price priceFallback(int productId) {
@@ -48,7 +50,7 @@ class ProductBuilder {
         return restTemplate.getForObject("http://comment-service/comment/$productId", List)
     }
 
-    List<Comment> commentFallback(int productId) {
+    List<Comment> commentFallback(int productId)    {
         log.error("failed to retrieve comments for {}", productId)
         return []
     }

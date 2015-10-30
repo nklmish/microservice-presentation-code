@@ -15,6 +15,12 @@ zuul:
     comment-service:
       path: /comment-service/**
 
+
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 60000
+ribbon:
+  ConnectTimeout: 3000
+  ReadTimeout: 60000
+
 endpoints:
   restart:
     enabled: true
